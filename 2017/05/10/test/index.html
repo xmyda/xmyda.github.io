@@ -90,12 +90,16 @@
 
 
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://yoursite.com/index.html">
+<meta name="description" content="使用 Ceph RBD 做为 Kubernetes 后端存储  Ceph 安装部署 由于这里我们使用 RBD 所以我们使用到的组件为 Ceph.mon, Ceph.osd, 这两个组件就可以了。 Ceph.mds 为 cephfs 所需组件  部署环境1234567# Ceph.Mon = 2n+1 个 ，3个的情况下只能掉线一个，如果同时2个掉线# 集群会出现无法仲裁，集群会一直等待 Ceph">
+<meta property="og:type" content="article">
+<meta property="og:title" content="test">
+<meta property="og:url" content="http://yoursite.com/2017/05/10/test/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="使用 Ceph RBD 做为 Kubernetes 后端存储  Ceph 安装部署 由于这里我们使用 RBD 所以我们使用到的组件为 Ceph.mon, Ceph.osd, 这两个组件就可以了。 Ceph.mds 为 cephfs 所需组件  部署环境1234567# Ceph.Mon = 2n+1 个 ，3个的情况下只能掉线一个，如果同时2个掉线# 集群会出现无法仲裁，集群会一直等待 Ceph">
+<meta property="og:updated_time" content="2017-05-10T08:13:29.450Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hexo">
+<meta name="twitter:title" content="test">
+<meta name="twitter:description" content="使用 Ceph RBD 做为 Kubernetes 后端存储  Ceph 安装部署 由于这里我们使用 RBD 所以我们使用到的组件为 Ceph.mon, Ceph.osd, 这两个组件就可以了。 Ceph.mds 为 cephfs 所需组件  部署环境1234567# Ceph.Mon = 2n+1 个 ，3个的情况下只能掉线一个，如果同时2个掉线# 集群会出现无法仲裁，集群会一直等待 Ceph">
 
 
 
@@ -123,13 +127,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/05/10/test/"/>
 
 
 
 
 
-  <title>Hexo</title>
+  <title>test | Hexo</title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
@@ -154,9 +158,7 @@
     
   
 
-  <div class="container sidebar-position-left 
-   page-home 
- ">
+  <div class="container sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -239,9 +241,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
 
@@ -267,9 +269,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/05/10/test/" itemprop="url">test</a></h1>
+          <h1 class="post-title" itemprop="name headline">test</h1>
         
 
         <div class="post-meta">
@@ -316,9 +316,7 @@
       
 
       
-        
-          
-            <blockquote>
+        <blockquote>
 <p>使用 Ceph RBD 做为 Kubernetes 后端存储</p>
 </blockquote>
 <h1 id="Ceph-安装部署"><a href="#Ceph-安装部署" class="headerlink" title="Ceph 安装部署"></a>Ceph 安装部署</h1><blockquote>
@@ -352,20 +350,27 @@
 <h2 id="Error-1"><a href="#Error-1" class="headerlink" title="Error 1"></a>Error 1</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"># 删除 osd 如果创建出错，请删除 osd</div><div class="line"></div><div class="line"># 使用 ceph osd tree 查看出错的 osd.id</div><div class="line"></div><div class="line">ceph osd out id   提出集群</div><div class="line"></div><div class="line"># 登陆所在 服务器 停止服务</div><div class="line"></div><div class="line">systemctl stop ceph-osd@id</div><div class="line"></div><div class="line"># 然后再执行  crush remove 删除 tree</div><div class="line"></div><div class="line">ceph osd crush remove osd.id</div><div class="line"></div><div class="line"># 最后 执行 auth del 和 rm 删除</div><div class="line"></div><div class="line">ceph auth del osd.id </div><div class="line"></div><div class="line">ceph osd rm id</div><div class="line"></div><div class="line"># 在运行 tree 已经不存在了</div><div class="line"># 如果使用分区挂载 还需要 登陆 osd 节点中 umount 分区</div><div class="line"># 使用 lsblk 查看挂载</div><div class="line"># 如: /dev/sdb 被挂载</div><div class="line"></div><div class="line">umount /dev/sdb</div><div class="line">ceph-disk zap /dev/sdb</div></pre></td></tr></table></figure>
 <h2 id="Error-2"><a href="#Error-2" class="headerlink" title="Error 2"></a>Error 2</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div></pre></td><td class="code"><pre><div class="line"># 如果暴力删除了 osd 然后重建了 osd</div><div class="line"></div><div class="line">ceph -s</div><div class="line"></div><div class="line">报错 stale+active+undersized+degraded+remapped</div><div class="line"></div><div class="line"># 执行 ceph health detail 查看所有报错的信息</div><div class="line"></div><div class="line"># 执行 ceph pg &lt;pgid&gt; query  查看具体信息</div><div class="line"># 如果执行 query 报错</div><div class="line"># 使用 ceph pg force_create_pg &lt;pgid&gt;  覆盖错误</div><div class="line"></div><div class="line"># 如果 datail 有很多 pgid 出错 使用 for 循环去跑</div><div class="line"></div><div class="line">for pg in `ceph health detail | grep &quot;stale+active+undersized+degraded&quot; | awk &apos;&#123;print $2&#125;&apos; | sort | uniq`; </div><div class="line">do </div><div class="line">  ceph pg force_create_pg $pg</div><div class="line">done</div><div class="line"></div><div class="line"># 如果仍然不能解决问题，那么请使用暴力方法</div><div class="line"># 重建ceph 集群 删除集群所有文件,重新部署</div><div class="line"></div><div class="line">systemctl stop ceph-osd.target</div><div class="line">systemctl stop ceph-mon.target</div><div class="line"></div><div class="line"></div><div class="line">rm -rf /etc/ceph/*</div><div class="line">rm -rf /var/log/ceph/*</div><div class="line">rm -rf /var/lib/ceph/*</div><div class="line"></div><div class="line"># osd 清除挂载 目录的里的所有内容</div><div class="line"></div><div class="line"># 卸载 ceph</div><div class="line">yum -y remove ceph ceph-radosgw</div><div class="line"></div><div class="line"># 重新安装 </div><div class="line">yum -y install ceph ceph-radosgw</div><div class="line"></div><div class="line"># 在 osd 节点 创建目录</div><div class="line">mkdir -p /var/lib/ceph/osd/</div></pre></td></tr></table></figure>
 
-          
+      
+    </div>
+
+    <div>
+      
         
+
       
     </div>
 
     <div>
       
-    </div>
+        
 
-    <div>
       
     </div>
 
     <div>
+      
+        
+
       
     </div>
 
@@ -373,252 +378,38 @@
       
 
       
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/05/10/Hello-World/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-
-    
-      <header class="post-header">
-
         
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/05/10/Hello-World/" itemprop="url">Hello World</a></h1>
-        
+      
 
-        <div class="post-meta">
-          <span class="post-time">
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
             
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-05-10T14:31:32+08:00">
-                2017-05-10
-              </time>
+              <a href="/2017/05/10/Hello-World/" rel="next" title="Hello World">
+                <i class="fa fa-chevron-left"></i> Hello World
+              </a>
             
+          </div>
 
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
             
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
+          </div>
         </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
       
 
       
-        
-          
-            
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
       
     </footer>
   </article>
 
 
-    
-      
 
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/05/10/hello-world/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/05/10/hello-world/" itemprop="url">Hello World</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-05-10T14:15:43+08:00">
-                2017-05-10
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo new <span class="string">"My New Post"</span></div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo server</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo generate</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo deploy</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
-
-          
-        
+    <div class="post-spread">
       
     </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-  </section>
-
-  
+  </div>
 
 
           </div>
@@ -626,6 +417,10 @@
 
 
           
+  <div class="comments" id="comments">
+    
+  </div>
+
 
         </div>
         
@@ -645,8 +440,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.gif"
@@ -690,6 +494,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Ceph-安装部署"><span class="nav-number">1.</span> <span class="nav-text">Ceph 安装部署</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#部署环境"><span class="nav-number">1.1.</span> <span class="nav-text">部署环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#初始化环境"><span class="nav-number">1.2.</span> <span class="nav-text">初始化环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装-Ceph-deploy"><span class="nav-number">1.3.</span> <span class="nav-text">安装 Ceph-deploy</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#创建-Ceph-Mon"><span class="nav-number">1.4.</span> <span class="nav-text">创建 Ceph-Mon</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装-Ceph"><span class="nav-number">1.5.</span> <span class="nav-text">安装 Ceph</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#初始化-ceph-mon-节点"><span class="nav-number">1.6.</span> <span class="nav-text">初始化 ceph-mon 节点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#初始化-ceph-osd-节点"><span class="nav-number">1.7.</span> <span class="nav-text">初始化 ceph.osd 节点</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Kubernetes-Volume-Ceph-RBD"><span class="nav-number">2.</span> <span class="nav-text">Kubernetes Volume Ceph RBD</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#k8s-安装-ceph-common"><span class="nav-number">2.1.</span> <span class="nav-text">k8s 安装 ceph-common</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#修改-ceph-配置"><span class="nav-number">2.2.</span> <span class="nav-text">修改 ceph 配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#创建-ceph-secret"><span class="nav-number">2.3.</span> <span class="nav-text">创建 ceph-secret</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#创建-ceph-image"><span class="nav-number">2.4.</span> <span class="nav-text">创建 ceph  image</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#创建一个-pv"><span class="nav-number">2.5.</span> <span class="nav-text">创建一个 pv</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#创建一个-pvc"><span class="nav-number">2.6.</span> <span class="nav-text">创建一个 pvc</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#创建一个-deployment"><span class="nav-number">2.7.</span> <span class="nav-text">创建一个 deployment</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#测试"><span class="nav-number">2.8.</span> <span class="nav-text">测试</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#FAQ-and-Error"><span class="nav-number">3.</span> <span class="nav-text">FAQ and Error</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#FAQ-1"><span class="nav-number">3.1.</span> <span class="nav-text">FAQ 1</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Error-1"><span class="nav-number">3.2.</span> <span class="nav-text">Error 1</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Error-2"><span class="nav-number">3.3.</span> <span class="nav-text">Error 2</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -803,6 +623,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
 
   
 
